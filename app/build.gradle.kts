@@ -59,6 +59,8 @@ dependencies {
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
+    implementation(libs.retrofit)
+    implementation(libs.kotlinx.serialization)
     testImplementation(libs.junit)
     testImplementation(libs.cashapp.turbine)
     testImplementation(libs.kotlinx.coroutines.test)
