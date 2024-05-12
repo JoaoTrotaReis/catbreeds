@@ -7,7 +7,7 @@ import com.joaoreis.catbreeds.catbreedlist.domain.CatBreed
 class BreedRemoteDataSourceImplementation(
     private val catApi: CatApi
 ): BreedRemoteDataSource {
-    override fun getBreedList(): Result<List<CatBreed>> {
+    override suspend fun getBreedList(): Result<List<CatBreed>> {
         return try {
             val catBreeds = catApi.getCatBreeds().map {
                 it.toDomainModel()

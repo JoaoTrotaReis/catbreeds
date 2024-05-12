@@ -13,7 +13,18 @@ class BreedRepositoryImplementation(
 ): BreedRepository {
     override suspend fun getCatBreeds(): Result<List<CatBreed>> = withContext(dispatcher){
         when(val localBreedList = localDataSource.getBreedList()) {
-            is Result.Success -> localBreedList
+            is Result.Success -> {
+                if(localBreedList.data.isEmpty()) {
+                    when(val remoteBreedList = remoteDataSource.getBreedList()) {
+                        is Result.Error -> Result.Error()
+                        is Result.Success -> {
+                            localDataSource.saveBreedList(remoteBreedList.data)
+                            Result.Success(remoteBreedList.data)
+                        }
+                    }
+                } else localBreedList
+
+            }
             is Result.Error -> {
                 when(val remoteBreedList = remoteDataSource.getBreedList()) {
                     is Result.Error -> Result.Error()
