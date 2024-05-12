@@ -15,24 +15,22 @@ class BreedRepositoryImplementation(
         when(val localBreedList = localDataSource.getBreedList()) {
             is Result.Success -> {
                 if(localBreedList.data.isEmpty()) {
-                    when(val remoteBreedList = remoteDataSource.getBreedList()) {
-                        is Result.Error -> Result.Error()
-                        is Result.Success -> {
-                            localDataSource.saveBreedList(remoteBreedList.data)
-                            Result.Success(remoteBreedList.data)
-                        }
-                    }
+                    loadAndSaveRemoteData()
                 } else localBreedList
 
             }
             is Result.Error -> {
-                when(val remoteBreedList = remoteDataSource.getBreedList()) {
-                    is Result.Error -> Result.Error()
-                    is Result.Success -> {
-                        localDataSource.saveBreedList(remoteBreedList.data)
-                        Result.Success(remoteBreedList.data)
-                    }
-                }
+                loadAndSaveRemoteData()
+            }
+        }
+    }
+
+    private suspend fun loadAndSaveRemoteData(): Result<List<CatBreed>> {
+        return when(val remoteBreedList = remoteDataSource.getBreedList()) {
+            is Result.Error -> Result.Error()
+            is Result.Success -> {
+                localDataSource.saveBreedList(remoteBreedList.data)
+                Result.Success(remoteBreedList.data)
             }
         }
     }

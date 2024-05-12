@@ -4,15 +4,19 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.joaoreis.catbreeds.catbreedlist.domain.BreedListInteractor
 import com.joaoreis.catbreeds.catbreedlist.domain.BreedListState
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class CatBreedListViewModel(
+@HiltViewModel
+class CatBreedListViewModel @Inject constructor(
     val breedListInteractor: BreedListInteractor
 ): ViewModel() {
     private val _viewState = MutableStateFlow<CatBreedListViewState>(CatBreedListViewState.Loading)
-    val viewState: Flow<CatBreedListViewState> = _viewState
+    val viewState: StateFlow<CatBreedListViewState> = _viewState
 
     init {
         viewModelScope.launch {
@@ -31,7 +35,7 @@ class CatBreedListViewModel(
             is BreedListState.Loaded -> {
                 _viewState.emit(CatBreedListViewState.Loaded(
                     breedListState.data.map {
-                        CatBreedViewItem(image = it.breedImage, breedName = it.breedName)
+                        CatBreedViewItem(image = it.breedImage ?: "", breedName = it.breedName)
                     }
                 ))
             }
