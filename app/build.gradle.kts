@@ -61,6 +61,8 @@ dependencies {
     implementation(libs.androidx.material3)
     implementation(libs.retrofit)
     implementation(libs.kotlinx.serialization)
+    implementation(libs.androidx.room.runtime)
+    annotationProcessor(libs.androidx.room.compiler)
     testImplementation(libs.junit)
     testImplementation(libs.cashapp.turbine)
     testImplementation(libs.kotlinx.coroutines.test)
