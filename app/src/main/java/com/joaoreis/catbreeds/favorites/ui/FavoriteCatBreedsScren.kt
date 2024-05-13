@@ -1,4 +1,4 @@
-package com.joaoreis.catbreeds.catbreedlist.ui
+package com.joaoreis.catbreeds.favorites.ui
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -8,15 +8,15 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
-import androidx.compose.material3.SearchBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.joaoreis.catbreeds.catbreedlist.presentation.CatBreedViewItem
+import com.joaoreis.catbreeds.catbreedlist.ui.CatBreedItem
 
 @Composable
-fun CatBreedsListScreen(
+fun FavoriteCatBreedsScreen(
     catBreedItems: List<CatBreedViewItem>,
     modifier: Modifier = Modifier
 ) {
@@ -42,7 +42,7 @@ fun CatBreedsListScreen(
 @Preview
 @Composable
 fun CatBreedListScreen_Preview() {
-    CatBreedsListScreen(catBreedItems = listOf(
+    FavoriteCatBreedsScreen(catBreedItems = listOf(
         CatBreedViewItem(image = "https://cdn2.thecatapi.com/images/ozEvzdVM-.jpg", breedName = "Abyssinian"),
         CatBreedViewItem(image = "https://cdn2.thecatapi.com/images/ozEvzdVM-.jpg", breedName = "Abyssinian"),
         CatBreedViewItem(image = "https://cdn2.thecatapi.com/images/ozEvzdVM-.jpg", breedName = "Abyssinian"),

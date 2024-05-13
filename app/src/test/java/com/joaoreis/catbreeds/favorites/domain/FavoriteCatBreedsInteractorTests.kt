@@ -1,10 +1,9 @@
-package com.joaoreis.catbreeds.favorites
+package com.joaoreis.catbreeds.favorites.domain
 
 import app.cash.turbine.test
 import com.joaoreis.catbreeds.Result
-import com.joaoreis.catbreeds.catbreedlist.data.local.CatBreedEntity
 import com.joaoreis.catbreeds.catbreedlist.domain.CatBreed
-import com.joaoreis.catbreeds.favorites.domain.FavoriteCatBreedsGateway
+import com.joaoreis.catbreeds.favorites.data.FakeFavoriteCatBreedsGateway
 import com.joaoreis.catbreeds.favorites.domain.FavoriteCatBreedsInteractorImplementation
 import com.joaoreis.catbreeds.favorites.domain.FavoriteCatBreedsState
 import kotlinx.coroutines.test.StandardTestDispatcher
