@@ -65,8 +65,8 @@ class CatBreedListViewModelTests {
         val interactor = FakeBreedListInteractor(
             currentState = BreedListState.Loaded(
                 listOf(
-                    CatBreed("id1", "name1", "image1", "origin1", "description1", listOf("temperament")),
-                    CatBreed("id2", "name2", "image2", "origin2", "description2", listOf("temperament"))
+                    CatBreed("id1", "name1", "image1", "origin1", "description1", listOf("temperament"), false),
+                    CatBreed("id2", "name2", "image2", "origin2", "description2", listOf("temperament"), false)
                 )
             )
         )

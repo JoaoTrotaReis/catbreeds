@@ -11,4 +11,7 @@ interface CatBreedsDao {
 
     @Insert
     fun saveCatBreeds(catBreeds: List<CatBreedEntity>)
+
+    @Query("SELECT * FROM catbreedentity where isFavorite=1")
+    fun getFavoriteBreeds(): List<CatBreedEntity>
 }

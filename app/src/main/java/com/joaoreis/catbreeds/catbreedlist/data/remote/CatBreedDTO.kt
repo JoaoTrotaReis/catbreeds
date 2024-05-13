@@ -31,6 +31,7 @@ fun CatBreedDTO.toDomainModel(): CatBreed {
         breedImage = image?.url ?: urlFromId,
         origin = origin,
         description = description,
-        temperament = temperament.split(",").map { it.trim() }
+        temperament = temperament.split(",").map { it.trim() },
+        isFavorite = false
     )
 }

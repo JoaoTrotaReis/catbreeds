@@ -13,8 +13,8 @@ class BreedRepositoryTests {
     @Test
     fun `Given there are breeds in local data source When list of breeds is requested Then return the local data source breeds`() = runTest {
         val catBreeds = listOf(
-            CatBreed("id1", "name1", "image1", "origin1", "description1", listOf("temperament")),
-            CatBreed("id2", "name2", "image2", "origin2", "description2", listOf("temperament"))
+            CatBreed("id1", "name1", "image1", "origin1", "description1", listOf("temperament"), false),
+            CatBreed("id2", "name2", "image2", "origin2", "description2", listOf("temperament"), false)
         )
 
         val localDataSource = FakeLocalDataSource(Result.Success(catBreeds))
@@ -33,8 +33,8 @@ class BreedRepositoryTests {
     @Test
     fun `Given there are no breeds in local data source And there are breeds in remote data source When list of breeds is requested Then return the remote data source breeds`() = runTest {
         val catBreeds = listOf(
-            CatBreed("id1", "name1", "image1", "origin1", "description1", listOf("temperament")),
-            CatBreed("id2", "name2", "image2", "origin2", "description2", listOf("temperament"))
+            CatBreed("id1", "name1", "image1", "origin1", "description1", listOf("temperament"), false),
+            CatBreed("id2", "name2", "image2", "origin2", "description2", listOf("temperament"), false)
         )
 
         val localDataSource = FakeLocalDataSource(Result.Error())
@@ -70,8 +70,8 @@ class BreedRepositoryTests {
     @Test
     fun `Given there are no breeds in local data source And there are breeds in remote data source When list of breeds is requested Then the remote breeds should be stored`() = runTest {
         val catBreeds = listOf(
-            CatBreed("id1", "name1", "image1", "origin1", "description1", listOf("temperament")),
-            CatBreed("id2", "name2", "image2", "origin2", "description2", listOf("temperament"))
+            CatBreed("id1", "name1", "image1", "origin1", "description1", listOf("temperament"), false),
+            CatBreed("id2", "name2", "image2", "origin2", "description2", listOf("temperament"), false)
         )
 
         val localDataSource = FakeLocalDataSource(Result.Error())

@@ -10,4 +10,8 @@ class FakeCatBreedsDao(
     override fun saveCatBreeds(catBreeds: List<CatBreedEntity>) {
         savedCatBreeds.addAll(catBreeds)
     }
+
+    override fun getFavoriteBreeds(): List<CatBreedEntity> {
+        TODO("Not yet implemented")
+    }
 }

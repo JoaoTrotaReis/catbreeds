@@ -6,5 +6,5 @@ import com.joaoreis.catbreeds.catbreedlist.domain.CatBreed
 class FakeRemoteDataSource(
     val getBreedsResult: Result<List<CatBreed>>
 ): BreedRemoteDataSource {
-    override fun getBreedList(): Result<List<CatBreed>> = getBreedsResult
+    override suspend fun getBreedList(): Result<List<CatBreed>> = getBreedsResult
 }

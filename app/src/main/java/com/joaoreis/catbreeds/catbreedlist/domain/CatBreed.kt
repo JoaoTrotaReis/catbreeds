@@ -6,5 +6,6 @@ data class CatBreed(
     val breedImage: String?,
     val origin: String,
     val description: String,
-    val temperament: List<String>
+    val temperament: List<String>,
+    val isFavorite: Boolean
 )

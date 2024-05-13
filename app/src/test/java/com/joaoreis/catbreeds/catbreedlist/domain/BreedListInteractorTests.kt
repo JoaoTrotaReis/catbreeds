@@ -15,8 +15,8 @@ class BreedListInteractorTests {
     fun `Given there are available cat breeds When cat breed list is requested Then emit a Loading state followed by a Loaded state with the breed list`() = runTest {
         val dispatcher = StandardTestDispatcher(testScheduler)
         val catBreeds = listOf(
-            CatBreed("id1", "name1", "image1", "origin1", "description1", listOf("temperament")),
-            CatBreed("id2", "name2", "image2", "origin2", "description2", listOf("temperament"))
+            CatBreed("id1", "name1", "image1", "origin1", "description1", listOf("temperament"), false),
+            CatBreed("id2", "name2", "image2", "origin2", "description2", listOf("temperament"), false)
         )
 
         val breedRepository: BreedRepository = FakeBreedRepository(Result.Success(catBreeds))

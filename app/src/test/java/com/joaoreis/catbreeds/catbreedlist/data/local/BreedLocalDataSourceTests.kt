@@ -10,14 +10,14 @@ class BreedLocalDataSourceTests {
     @Test
     fun `Given there are cat breeds in the database When cat breeds are requested Then return cat breeds`() {
         val catBreeds = listOf(
-            CatBreedEntity("id1", "description1", "origin1", "name1", "image1", listOf("one","two")),
-            CatBreedEntity("id2", "description2", "origin2", "name2", "image2", listOf("three","four"))
+            CatBreedEntity("id1", "description1", "origin1", "name1", "image1", listOf("one","two"), false),
+            CatBreedEntity("id2", "description2", "origin2", "name2", "image2", listOf("three","four"), false)
         )
 
         val expectedResult: Result<List<CatBreed>> = Result.Success(
             listOf(
-                CatBreed("id1", "name1", "image1", "origin1", "description1", listOf("one","two")),
-                CatBreed("id2", "name2", "image2", "origin2", "description2", listOf("three","four"))
+                CatBreed("id1", "name1", "image1", "origin1", "description1", listOf("one","two"), false),
+                CatBreed("id2", "name2", "image2", "origin2", "description2", listOf("three","four"), false)
             )
         )
 
@@ -33,13 +33,13 @@ class BreedLocalDataSourceTests {
     @Test
     fun `Given a list of cat breeds When cat breeds list is saved Then it should be stored in database`() {
         val expectedResult = listOf(
-            CatBreedEntity("id1", "description1", "origin1", "name1", "image1", listOf("one","two")),
-            CatBreedEntity("id2", "description2", "origin2", "name2", "image2", listOf("three","four"))
+            CatBreedEntity("id1", "description1", "origin1", "name1", "image1", listOf("one","two"), false),
+            CatBreedEntity("id2", "description2", "origin2", "name2", "image2", listOf("three","four"), false)
         )
 
         val catBreeds: List<CatBreed> = listOf(
-                CatBreed("id1", "name1", "image1", "origin1", "description1", listOf("one","two")),
-                CatBreed("id2", "name2", "image2", "origin2", "description2", listOf("three","four"))
+                CatBreed("id1", "name1", "image1", "origin1", "description1", listOf("one","two"), false),
+                CatBreed("id2", "name2", "image2", "origin2", "description2", listOf("three","four"), false)
         )
 
         val catBreedsDao = FakeCatBreedsDao()

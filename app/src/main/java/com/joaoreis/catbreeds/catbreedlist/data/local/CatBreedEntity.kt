@@ -11,7 +11,8 @@ data class CatBreedEntity(
     val origin: String,
     val name: String,
     val image: String,
-    val temperament: List<String>
+    val temperament: List<String>,
+    val isFavorite: Boolean
 )
 
 fun CatBreedEntity.toDomainModel(): CatBreed = CatBreed(
@@ -20,7 +21,8 @@ fun CatBreedEntity.toDomainModel(): CatBreed = CatBreed(
     breedImage = this.image,
     origin = this.origin,
     description = this.description,
-    temperament = this.temperament
+    temperament = this.temperament,
+    isFavorite = this.isFavorite
 )
 
 fun CatBreed.toDatabaseEntity(): CatBreedEntity = CatBreedEntity(
@@ -29,5 +31,6 @@ fun CatBreed.toDatabaseEntity(): CatBreedEntity = CatBreedEntity(
     image = this.breedImage ?: "",
     origin = this.origin,
     description = this.description,
-    temperament = this.temperament
+    temperament = this.temperament,
+    isFavorite = this.isFavorite
 )
