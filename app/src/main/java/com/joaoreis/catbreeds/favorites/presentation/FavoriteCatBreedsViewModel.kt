@@ -20,6 +20,11 @@ class FavoriteCatBreedsViewModel @Inject constructor(
     init {
         viewModelScope.launch {
             favoriteCatBreedsInteractor.loadFavoriteCatBreeds()
+        }
+    }
+
+    fun subscribeToStateChanges() {
+        viewModelScope.launch {
             favoriteCatBreedsInteractor.state.collect {
                 handleDomainStateChanges(it)
             }
@@ -35,6 +40,7 @@ class FavoriteCatBreedsViewModel @Inject constructor(
                 _viewState.emit(FavoriteCatBreedsViewState.Loaded(
                     breedListState.data.map {
                         FavoriteCatBreedViewItem(
+                            id = it.breedId,
                             image = it.breedImage ?: "",
                             breedName = it.breedName
                         )
@@ -45,6 +51,12 @@ class FavoriteCatBreedsViewModel @Inject constructor(
                 _viewState.emit(FavoriteCatBreedsViewState.Loading)
             }
             FavoriteCatBreedsState.Idle -> {}
+        }
+    }
+
+    fun toggleFavorite(id: String, isFavorite: Boolean) {
+        viewModelScope.launch {
+            favoriteCatBreedsInteractor.toggleFavorite(id, isFavorite)
         }
     }
 }

@@ -6,4 +6,6 @@ interface FavoriteCatBreedsInteractor {
     val state: Flow<FavoriteCatBreedsState>
 
     suspend fun loadFavoriteCatBreeds()
+
+    suspend fun toggleFavorite(id: String, isFavorite: Boolean)
 }

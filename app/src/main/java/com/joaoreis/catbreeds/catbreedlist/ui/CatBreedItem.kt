@@ -20,7 +20,14 @@ import com.joaoreis.catbreeds.R
 import com.joaoreis.catbreeds.ui.components.FavoriteButton
 
 @Composable
-fun CatBreedItem(imageUrl: String, breedName: String, modifier: Modifier = Modifier) {
+fun CatBreedItem(
+    id: String,
+    imageUrl: String,
+    breedName: String,
+    isFavorite: Boolean,
+    onFavoriteToggle: (String, Boolean) -> Unit,
+    modifier: Modifier = Modifier
+) {
     Box(
         modifier = modifier.padding(12.dp),
         contentAlignment = Alignment.TopEnd
@@ -40,7 +47,7 @@ fun CatBreedItem(imageUrl: String, breedName: String, modifier: Modifier = Modif
             Spacer(modifier = Modifier.padding(8.dp))
             Text(breedName)
         }
-        FavoriteButton(onToggle = {}, isFavorite = false)
+        FavoriteButton(onToggle = { onFavoriteToggle(id, it) }, isFavorite = isFavorite)
     }
 }
 
@@ -48,7 +55,10 @@ fun CatBreedItem(imageUrl: String, breedName: String, modifier: Modifier = Modif
 @Composable
 fun CatBreedItem_Preview() {
     CatBreedItem(
+        id = "id",
         imageUrl = "https://cdn2.thecatapi.com/images/ozEvzdVM-.jpg",
-        breedName = "Abyssinian"
+        breedName = "Abyssinian",
+        isFavorite = true,
+        onFavoriteToggle = {_,_ ->}
     )
 }

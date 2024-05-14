@@ -11,6 +11,7 @@ import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
 import org.junit.After
 import org.junit.Assert
+import org.junit.Assert.*
 import org.junit.Before
 import org.junit.Test
 
@@ -38,7 +39,7 @@ class FavoriteCatBreedsViewModelTests {
         )
 
         viewModel.viewState.test {
-            Assert.assertTrue(awaitItem() is FavoriteCatBreedsViewState.Loading)
+            assertTrue(awaitItem() is FavoriteCatBreedsViewState.Loading)
         }
     }
 
@@ -52,8 +53,10 @@ class FavoriteCatBreedsViewModelTests {
             interactor
         )
 
+        viewModel.subscribeToStateChanges()
+
         viewModel.viewState.test {
-            Assert.assertTrue(awaitItem() is FavoriteCatBreedsViewState.Error)
+            assertTrue(awaitItem() is FavoriteCatBreedsViewState.Error)
         }
     }
 
@@ -70,7 +73,8 @@ class FavoriteCatBreedsViewModelTests {
 
         val expectedViewState = FavoriteCatBreedsViewState.Loaded(
             listOf(
-                FavoriteCatBreedViewItem("image1", "name1"), FavoriteCatBreedViewItem("image2", "name2")
+                FavoriteCatBreedViewItem("id1", "image1", "name1"),
+                FavoriteCatBreedViewItem("id2","image2", "name2")
             )
         )
 
@@ -78,8 +82,10 @@ class FavoriteCatBreedsViewModelTests {
             interactor
         )
 
+        viewModel.subscribeToStateChanges()
+
         viewModel.viewState.test {
-            Assert.assertEquals(expectedViewState, awaitItem())
+            assertEquals(expectedViewState, awaitItem())
         }
     }
 }

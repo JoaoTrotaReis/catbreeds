@@ -27,11 +27,8 @@ fun BottomNavigationBar(navController: NavHostController, items: List<Screen>) {
                 onClick = {
                     navigationSelectedItem.value = index
                     navController.navigate(navigationItem.route) {
-                        popUpTo(navController.graph.findStartDestination().id) {
-                            saveState = true
-                        }
+                        popUpTo(navController.graph.findStartDestination().id)
                         launchSingleTop = true
-                        restoreState = true
                     }
                 }
             )
