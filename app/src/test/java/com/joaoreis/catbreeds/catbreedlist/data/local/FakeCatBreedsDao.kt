@@ -14,4 +14,8 @@ class FakeCatBreedsDao(
     override fun getFavoriteBreeds(): List<CatBreedEntity> {
         TODO("Not yet implemented")
     }
+
+    override fun updateCatBreed(id: String, isFavorite: Boolean) {
+
+    }
 }

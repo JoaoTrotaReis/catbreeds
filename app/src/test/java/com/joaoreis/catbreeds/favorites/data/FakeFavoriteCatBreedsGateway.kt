@@ -7,5 +7,7 @@ import com.joaoreis.catbreeds.favorites.domain.FavoriteCatBreedsGateway
 class FakeFavoriteCatBreedsGateway(
     val favoriteBreedsResult: Result<List<CatBreed>>
 ): FavoriteCatBreedsGateway {
+    val favorites = HashMap<String, Boolean>()
     override suspend fun getFavoriteCatBreeds(): Result<List<CatBreed>> = favoriteBreedsResult
+    override suspend fun toggleFavorite(id: String, isFavorite: Boolean) { favorites[id] = isFavorite }
 }
