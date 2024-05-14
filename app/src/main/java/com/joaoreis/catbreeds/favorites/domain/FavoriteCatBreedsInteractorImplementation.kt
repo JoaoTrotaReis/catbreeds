@@ -22,4 +22,9 @@ class FavoriteCatBreedsInteractorImplementation(
             }
         }
     }
+
+    override suspend fun toggleFavorite(id: String, isFavorite: Boolean) {
+        favoriteCatBreedsGateway.toggleFavorite(id, isFavorite)
+        loadFavoriteCatBreeds()
+    }
 }

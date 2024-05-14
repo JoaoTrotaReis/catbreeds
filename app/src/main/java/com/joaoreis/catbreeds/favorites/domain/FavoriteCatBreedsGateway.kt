@@ -5,4 +5,5 @@ import com.joaoreis.catbreeds.catbreedlist.domain.CatBreed
 
 interface FavoriteCatBreedsGateway {
     suspend fun getFavoriteCatBreeds(): Result<List<CatBreed>>
+    suspend fun toggleFavorite(id: String, isFavorite: Boolean)
 }

@@ -52,4 +52,78 @@ class FavoriteCatBreedsInteractorTests {
             assertTrue(awaitItem() is FavoriteCatBreedsState.Error)
         }
     }
+
+    @Test
+    fun `Given a cat breed When that breed is added to the favorites Then should update it in favorite gateway`() = runTest{
+        val dispatcher = StandardTestDispatcher(testScheduler)
+
+        val gateway = FakeFavoriteCatBreedsGateway(Result.Error())
+
+        val interactor = FavoriteCatBreedsInteractorImplementation(
+            favoriteCatBreedsGateway = gateway,
+            dispatcher = dispatcher
+        )
+
+        interactor.toggleFavorite("id", true)
+
+        assertTrue(gateway.favorites["id"] == true)
+    }
+
+    @Test
+    fun `Given a cat breed When that breed is removed from to the favorites Then should update it in favorite gateway`() = runTest {
+        val dispatcher = StandardTestDispatcher(testScheduler)
+
+        val gateway = FakeFavoriteCatBreedsGateway(Result.Error())
+
+        val interactor = FavoriteCatBreedsInteractorImplementation(
+            favoriteCatBreedsGateway = gateway,
+            dispatcher = dispatcher
+        )
+
+        interactor.toggleFavorite("id", false)
+
+        assertTrue(gateway.favorites["id"] == false)
+    }
+
+    @Test
+    fun `Given a cat breed When that breed is added to the favorites Then it should reload the favorite cat breeds`() = runTest{
+        val dispatcher = StandardTestDispatcher(testScheduler)
+
+        val expectedResult = FavoriteCatBreedsState.Loaded(listOf())
+
+        val gateway = FakeFavoriteCatBreedsGateway(Result.Success(listOf()))
+
+        val interactor = FavoriteCatBreedsInteractorImplementation(
+            favoriteCatBreedsGateway = gateway,
+            dispatcher = dispatcher
+        )
+
+        interactor.state.test {
+            awaitItem()
+            interactor.toggleFavorite("id", true)
+            assertTrue(awaitItem() is FavoriteCatBreedsState.Loading)
+            assertEquals(expectedResult, awaitItem())
+        }
+    }
+
+    @Test
+    fun `Given a cat breed When that breed is removed from the favorites Then it should reload the favorite cat breeds`() = runTest{
+        val dispatcher = StandardTestDispatcher(testScheduler)
+
+        val expectedResult = FavoriteCatBreedsState.Loaded(listOf())
+
+        val gateway = FakeFavoriteCatBreedsGateway(Result.Success(listOf()))
+
+        val interactor = FavoriteCatBreedsInteractorImplementation(
+            favoriteCatBreedsGateway = gateway,
+            dispatcher = dispatcher
+        )
+
+        interactor.state.test {
+            awaitItem()
+            interactor.toggleFavorite("id", false)
+            assertTrue(awaitItem() is FavoriteCatBreedsState.Loading)
+            assertEquals(expectedResult, awaitItem())
+        }
+    }
 }

@@ -11,4 +11,5 @@ class FakeFavoriteCatBreedsInteractor(
     override val state: Flow<FavoriteCatBreedsState> = MutableStateFlow(currentState)
 
     override suspend fun loadFavoriteCatBreeds() {  }
+    override suspend fun toggleFavorite(id: String, isFavorite: Boolean) { }
 }
