@@ -52,8 +52,6 @@ class FavoriteCatBreedsViewModelTests {
             interactor
         )
 
-        viewModel.subscribeToStateChanges()
-
         viewModel.viewState.test {
             assertTrue(awaitItem() is FavoriteCatBreedsViewState.Error)
         }
@@ -80,8 +78,6 @@ class FavoriteCatBreedsViewModelTests {
         val viewModel = FavoriteCatBreedsViewModel(
             interactor
         )
-
-        viewModel.subscribeToStateChanges()
 
         viewModel.viewState.test {
             assertEquals(expectedViewState, awaitItem())

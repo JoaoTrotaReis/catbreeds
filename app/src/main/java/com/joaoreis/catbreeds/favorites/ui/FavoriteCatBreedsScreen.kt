@@ -24,9 +24,6 @@ fun FavoriteCatBreedsScreen(
 ) {
     val viewModel: FavoriteCatBreedsViewModel = hiltViewModel()
 
-    LaunchedEffect(Unit) {
-        viewModel.subscribeToStateChanges()
-    }
 
     when (val state = viewModel.viewState.collectAsState().value) {
         FavoriteCatBreedsViewState.Error -> {
@@ -55,7 +52,7 @@ fun FavoriteCatBreedsScreen(
             } else {
                 CatBreedsList(
                     catBreedItems = state.catBreedItems.map { it.toListItem() },
-                    onFavoriteToggle = { id, isFavorite -> viewModel.toggleFavorite(id, isFavorite) },
+                    onFavoriteToggle = { id, _ -> viewModel.removeFromFavorites(id) },
                     modifier = modifier,
                     onItemClicked = onItemClicked
                 )

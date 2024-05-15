@@ -31,6 +31,5 @@ class FavoriteCatBreedsGatewayImplementation(
             catBreedsDao.updateCatBreed(id, isFavorite)
              _favoriteUpdates.emit(FavoriteUpdate(id, isFavorite))
         }
-
     }
 }

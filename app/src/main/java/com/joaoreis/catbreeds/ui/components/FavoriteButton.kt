@@ -37,7 +37,6 @@ fun FavoriteButton(
             }
         ) {
             Icon(
-                modifier = modifier,
                 tint = color,
                 imageVector = if (isFavorite) {
                     Icons.Filled.Favorite

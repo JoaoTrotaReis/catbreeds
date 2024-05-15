@@ -10,6 +10,7 @@ import com.joaoreis.catbreeds.catbreedlist.data.remote.CatBreedDTO
 import com.joaoreis.catbreeds.catbreedlist.data.remote.FakeCatApi
 import com.joaoreis.catbreeds.catbreedlist.data.remote.Image
 import com.joaoreis.catbreeds.catbreedlist.domain.BreedListInteractorImplementation
+import com.joaoreis.catbreeds.catbreedlist.domain.BreedListState
 import com.joaoreis.catbreeds.catbreedlist.presentation.CatBreedListViewModel
 import com.joaoreis.catbreeds.catbreedlist.presentation.CatBreedListViewState
 import com.joaoreis.catbreeds.catbreedlist.presentation.CatBreedViewItem
@@ -214,6 +215,198 @@ class CatBreedListIntegrationTests {
             awaitItem()
             viewModel.toggleFavorite("id1", true)
             assertEquals(expectedState, awaitItem())
+        }
+    }
+
+    @Test
+    fun `Given there are local results for search query When cat breeds are searched Then emit a loaded view state with searched local cat breeds`() = runTest {
+        val dispatcher = StandardTestDispatcher(testScheduler)
+        val catBreedEntities = listOf(
+            CatBreedEntity("id1", "description1", "origin1", "name1", "image1", listOf("one","two"), false),
+            CatBreedEntity("id2", "description2", "origin2", "name2", "image2", listOf("three","four"), false)
+        )
+
+        val catBreedSearchEntities = listOf(
+            CatBreedEntity("id3", "description1", "origin1", "name1", "image1", listOf("one","two"), false),
+            CatBreedEntity("id4", "description2", "origin2", "name2", "image2", listOf("three","four"), false)
+        )
+
+        val expectedState = CatBreedListViewState.Loaded(
+            listOf(
+                CatBreedViewItem("id3", "image1", "name1", false),
+                CatBreedViewItem("id4", "image2", "name2", false),
+            )
+        )
+
+        val catBreedsDao = FakeCatBreedsDao(
+            searchResult = catBreedSearchEntities, getCatBreedsResult = catBreedEntities
+        )
+        val catApi = FakeCatApi()
+
+        val breedListRepository = BreedRepositoryImplementation(
+            BreedLocalDataSourceImplementation(catBreedsDao),
+            BreedRemoteDataSourceImplementation(catApi),
+            dispatcher
+        )
+
+        val favoriteCatBreedsGateway = FavoriteCatBreedsGatewayImplementation(catBreedsDao, dispatcher)
+
+        val breedListInteractor = BreedListInteractorImplementation(
+            breedListRepository, favoriteCatBreedsGateway, dispatcher
+        )
+
+        val favoriteCatBreedsInteractor = FavoriteCatBreedsInteractorImplementation(
+            favoriteCatBreedsGateway, dispatcher
+        )
+
+        val viewModel = CatBreedListViewModel(
+            breedListInteractor = breedListInteractor,
+            favoriteCatBreedsInteractor = favoriteCatBreedsInteractor
+        )
+
+        viewModel.viewState.test {
+            assertTrue(awaitItem() is CatBreedListViewState.Loading)
+            assertTrue(awaitItem() is CatBreedListViewState.Loaded)
+            viewModel.searchCatBreeds("name")
+            assertTrue(awaitItem() is CatBreedListViewState.Loading)
+            assertEquals(expectedState, awaitItem())
+        }
+    }
+
+    @Test
+    fun `Given there are local no results for search query And there are remote results When cat breeds are searched Then emit a loaded view state with searched remote cat breeds`() = runTest {
+        val dispatcher = StandardTestDispatcher(testScheduler)
+        val catBreedDTOs = listOf(
+            CatBreedDTO("id1", "one, two", "description1", "origin1", "name1", "id", Image("image1")),
+            CatBreedDTO("id2", "three, four", "description2", "origin2", "name2","id", Image("image2"))
+        )
+
+        val catBreedSearchDTOs = listOf(
+            CatBreedDTO("id3", "one, two", "description1", "origin1", "name1", "id", Image("image1")),
+            CatBreedDTO("id4", "three, four", "description2", "origin2", "name2","id", Image("image2"))
+        )
+
+        val expectedState = CatBreedListViewState.Loaded(
+            listOf(
+                CatBreedViewItem("id3", "image1", "name1", false),
+                CatBreedViewItem("id4", "image2", "name2", false),
+            )
+        )
+
+        val catBreedsDao = FakeCatBreedsDao()
+        val catApi = FakeCatApi(catBreedList = catBreedDTOs, searchResults = catBreedSearchDTOs)
+
+        val breedListRepository = BreedRepositoryImplementation(
+            BreedLocalDataSourceImplementation(catBreedsDao),
+            BreedRemoteDataSourceImplementation(catApi),
+            dispatcher
+        )
+
+        val favoriteCatBreedsGateway = FavoriteCatBreedsGatewayImplementation(catBreedsDao, dispatcher)
+
+        val breedListInteractor = BreedListInteractorImplementation(
+            breedListRepository, favoriteCatBreedsGateway, dispatcher
+        )
+
+        val favoriteCatBreedsInteractor = FavoriteCatBreedsInteractorImplementation(
+            favoriteCatBreedsGateway, dispatcher
+        )
+
+        val viewModel = CatBreedListViewModel(
+            breedListInteractor = breedListInteractor,
+            favoriteCatBreedsInteractor = favoriteCatBreedsInteractor
+        )
+
+        viewModel.viewState.test {
+            assertTrue(awaitItem() is CatBreedListViewState.Loading)
+            assertTrue(awaitItem() is CatBreedListViewState.Loaded)
+            viewModel.searchCatBreeds("name")
+            assertTrue(awaitItem() is CatBreedListViewState.Loading)
+            assertEquals(expectedState, awaitItem())
+        }
+    }
+
+    @Test
+    fun `Given there are no local and remote results When cat breeds are searched Then emit a empty serach view state`() = runTest {
+        val dispatcher = StandardTestDispatcher(testScheduler)
+        val catBreedDTOs = listOf(
+            CatBreedDTO("id1", "one, two", "description1", "origin1", "name1", "id", Image("image1")),
+            CatBreedDTO("id2", "three, four", "description2", "origin2", "name2","id", Image("image2"))
+        )
+
+
+        val catBreedsDao = FakeCatBreedsDao(searchResult = listOf())
+        val catApi = FakeCatApi(catBreedList = catBreedDTOs, searchResults = listOf())
+
+        val breedListRepository = BreedRepositoryImplementation(
+            BreedLocalDataSourceImplementation(catBreedsDao),
+            BreedRemoteDataSourceImplementation(catApi),
+            dispatcher
+        )
+
+        val favoriteCatBreedsGateway = FavoriteCatBreedsGatewayImplementation(catBreedsDao, dispatcher)
+
+        val breedListInteractor = BreedListInteractorImplementation(
+            breedListRepository, favoriteCatBreedsGateway, dispatcher
+        )
+
+        val favoriteCatBreedsInteractor = FavoriteCatBreedsInteractorImplementation(
+            favoriteCatBreedsGateway, dispatcher
+        )
+
+        val viewModel = CatBreedListViewModel(
+            breedListInteractor = breedListInteractor,
+            favoriteCatBreedsInteractor = favoriteCatBreedsInteractor
+        )
+
+        viewModel.viewState.test {
+            assertTrue(awaitItem() is CatBreedListViewState.Loading)
+            assertTrue(awaitItem() is CatBreedListViewState.Loaded)
+            viewModel.searchCatBreeds("name")
+            assertTrue(awaitItem() is CatBreedListViewState.Loading)
+            assertTrue(awaitItem() is CatBreedListViewState.EmptySearchResults)
+        }
+    }
+
+    @Test
+    fun `Given there is an error getting local and remote search results When cat breeds are searched Then emit a empty serach view state`() = runTest {
+        val dispatcher = StandardTestDispatcher(testScheduler)
+        val catBreedDTOs = listOf(
+            CatBreedDTO("id1", "one, two", "description1", "origin1", "name1", "id", Image("image1")),
+            CatBreedDTO("id2", "three, four", "description2", "origin2", "name2","id", Image("image2"))
+        )
+
+
+        val catBreedsDao = FakeCatBreedsDao()
+        val catApi = FakeCatApi(catBreedList = catBreedDTOs)
+
+        val breedListRepository = BreedRepositoryImplementation(
+            BreedLocalDataSourceImplementation(catBreedsDao),
+            BreedRemoteDataSourceImplementation(catApi),
+            dispatcher
+        )
+
+        val favoriteCatBreedsGateway = FavoriteCatBreedsGatewayImplementation(catBreedsDao, dispatcher)
+
+        val breedListInteractor = BreedListInteractorImplementation(
+            breedListRepository, favoriteCatBreedsGateway, dispatcher
+        )
+
+        val favoriteCatBreedsInteractor = FavoriteCatBreedsInteractorImplementation(
+            favoriteCatBreedsGateway, dispatcher
+        )
+
+        val viewModel = CatBreedListViewModel(
+            breedListInteractor = breedListInteractor,
+            favoriteCatBreedsInteractor = favoriteCatBreedsInteractor
+        )
+
+        viewModel.viewState.test {
+            assertTrue(awaitItem() is CatBreedListViewState.Loading)
+            assertTrue(awaitItem() is CatBreedListViewState.Loaded)
+            viewModel.searchCatBreeds("name")
+            assertTrue(awaitItem() is CatBreedListViewState.Loading)
+            assertTrue(awaitItem() is CatBreedListViewState.Error)
         }
     }
 }

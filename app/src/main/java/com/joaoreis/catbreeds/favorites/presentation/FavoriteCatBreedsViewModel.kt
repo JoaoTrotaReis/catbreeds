@@ -20,11 +20,6 @@ class FavoriteCatBreedsViewModel @Inject constructor(
     init {
         viewModelScope.launch {
             favoriteCatBreedsInteractor.loadFavoriteCatBreeds()
-        }
-    }
-
-    fun subscribeToStateChanges() {
-        viewModelScope.launch {
             favoriteCatBreedsInteractor.state.collect {
                 handleDomainStateChanges(it)
             }
@@ -55,9 +50,9 @@ class FavoriteCatBreedsViewModel @Inject constructor(
         }
     }
 
-    fun toggleFavorite(id: String, isFavorite: Boolean) {
+    fun removeFromFavorites(id: String) {
         viewModelScope.launch {
-            favoriteCatBreedsInteractor.toggleFavorite(id, isFavorite)
+            favoriteCatBreedsInteractor.toggleFavorite(id, false)
         }
     }
 }
