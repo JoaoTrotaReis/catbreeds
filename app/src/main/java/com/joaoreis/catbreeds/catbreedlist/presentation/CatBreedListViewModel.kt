@@ -1,16 +1,14 @@
 package com.joaoreis.catbreeds.catbreedlist.presentation
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.joaoreis.catbreeds.catbreedlist.domain.BreedListInteractor
 import com.joaoreis.catbreeds.catbreedlist.domain.BreedListState
 import com.joaoreis.catbreeds.favorites.domain.FavoriteCatBreedsInteractor
-import com.joaoreis.catbreeds.favorites.domain.FavoriteCatBreedsState
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -24,6 +22,7 @@ class CatBreedListViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
+            breedListInteractor.loadCatBreedList()
             breedListInteractor.state.collect {
                 handleDomainStateChanges(it)
             }
@@ -77,16 +76,6 @@ class CatBreedListViewModel @Inject constructor(
     fun toggleFavorite(id: String, isFavorite: Boolean) {
         viewModelScope.launch {
             favoriteCatBreedsInteractor.toggleFavorite(id, isFavorite)
-            val currentViewState = _viewState.value
-            if (currentViewState is CatBreedListViewState.Loaded) {
-                val items = currentViewState.catBreedItems.toMutableList()
-                items.replaceAll {
-                    if (it.id == id) {
-                        it.copy(isFavorite = isFavorite)
-                    } else { it }
-                }
-                _viewState.emit(CatBreedListViewState.Loaded(items))
-            }
         }
     }
 }

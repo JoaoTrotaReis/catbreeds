@@ -33,20 +33,19 @@ fun AllCatBreedsListScreen(
     onItemClicked: (String) -> Unit
 ) {
     val viewModel: CatBreedListViewModel = hiltViewModel()
-    val text = remember { mutableStateOf("") }
-
-    LaunchedEffect(Unit) {
-        viewModel.loadCatBreeds()
-    }
+    val text = rememberSaveable { mutableStateOf("") }
 
     Column {
         SearchField(
-            modifier = Modifier.fillMaxWidth().padding(12.dp),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(12.dp),
             text = text.value,
             onTextChange = { text.value = it },
             placeHolder = "Search cat breeds",
             onCloseClicked = { text.value = ""
-                             viewModel.loadCatBreeds()},
+                             viewModel.loadCatBreeds()
+                             },
             onSearchClicked = { viewModel.searchCatBreeds(it)} )
 
         when (val state = viewModel.viewState.collectAsState().value) {

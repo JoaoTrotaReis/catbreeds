@@ -26,13 +26,13 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             val navController = rememberNavController()
-            val screens = listOf(Screen.AllCatBreeds, Screen.FavoriteCatBreeds)
+            val bottomNavScreens = listOf(Screen.AllCatBreeds, Screen.FavoriteCatBreeds)
             CatBreedsTheme {
                 Scaffold(modifier = Modifier.fillMaxSize(),
                     bottomBar = {
                         BottomNavigationBar(
                             navController = navController,
-                            items = screens
+                            items = bottomNavScreens
                         )
                     }
                 ) { paddingValues ->

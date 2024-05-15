@@ -66,7 +66,8 @@ fun CatBreedDetailsScreen(
                         id, favorite
                     )
                 },
-                onBackPressed)
+                onBackPressed
+            )
         }
     }
 }
@@ -133,33 +134,28 @@ fun BreedDetailsComponent(
         }
         Surface(
             shape = CircleShape,
-            modifier = Modifier.align(Alignment.TopStart)
+            modifier = Modifier
+                .align(Alignment.TopStart)
                 .padding(6.dp)
                 .size(32.dp),
             color = Color(0x77FFFFFF)
         ) {
             Icon(
-                modifier = Modifier.size(32.dp).clickable {
-                    onBackPressed()
-                },
+                modifier = Modifier
+                    .size(32.dp)
+                    .clickable {
+                        onBackPressed()
+                    },
                 imageVector = Icons.Filled.ArrowBack,
                 contentDescription = null,
             )
         }
 
-        Surface(
-            shape = CircleShape,
-            modifier = Modifier.align(Alignment.TopEnd)
-                .padding(6.dp)
-                .size(32.dp),
-            color = Color(0x77FFFFFF)
-        ) {
-            FavoriteButton(
-                modifier = Modifier,
-                onToggle = { onFavoriteToggle(catBreedDetails.id, it) },
-                isFavorite = catBreedDetails.isFavorite
-            )
-        }
+        FavoriteButton(
+            modifier = Modifier.align(Alignment.TopEnd),
+            onToggle = { onFavoriteToggle(catBreedDetails.id, it) },
+            isFavorite = catBreedDetails.isFavorite
+        )
     }
 }
 

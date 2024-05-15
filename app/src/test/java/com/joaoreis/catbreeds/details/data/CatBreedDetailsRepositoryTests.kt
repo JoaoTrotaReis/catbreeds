@@ -5,6 +5,7 @@ import com.joaoreis.catbreeds.catbreedlist.domain.CatBreed
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertTrue
 import org.junit.Test
 
 class CatBreedDetailsRepositoryTests {
@@ -43,9 +44,6 @@ class CatBreedDetailsRepositoryTests {
 
     @Test
     fun `Given a cat breed id And there are no local or remote details for that id When details are request Then return error`() = runTest {
-        val catBreed = CatBreed("id1", "name1", "image1", "origin1", "description1", listOf("temperament"), false)
-        val expectedResult = Result.Success(catBreed)
-
         val repository = CatBreedDetailsRepositoryImplementation(
             localDataSource = FakeBreedDetailsLocalSource(Result.Error()),
             remoteDataSource = FakeBreedDetailsRemoteSource(Result.Error()),
@@ -54,6 +52,6 @@ class CatBreedDetailsRepositoryTests {
 
         val actualResult = repository.getCatBreed("id")
 
-        assertEquals(expectedResult, actualResult)
+        assertTrue(actualResult is Result.Error)
     }
 }

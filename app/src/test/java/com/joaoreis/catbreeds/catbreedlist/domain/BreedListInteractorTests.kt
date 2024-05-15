@@ -3,7 +3,11 @@ package com.joaoreis.catbreeds.catbreedlist.domain
 import app.cash.turbine.test
 import com.joaoreis.catbreeds.Result
 import com.joaoreis.catbreeds.catbreedlist.FakeBreedRepository
+import com.joaoreis.catbreeds.favorites.data.FakeFavoriteCatBreedsGateway
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.test.StandardTestDispatcher
+import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
@@ -23,6 +27,7 @@ class BreedListInteractorTests {
 
         val interactor = BreedListInteractorImplementation(
             breedRepository = breedRepository,
+            favoriteCatBreedsGateway = FakeFavoriteCatBreedsGateway(),
             dispatcher = dispatcher
         )
 
@@ -42,6 +47,7 @@ class BreedListInteractorTests {
 
         val interactor = BreedListInteractorImplementation(
             breedRepository = breedRepository,
+            favoriteCatBreedsGateway = FakeFavoriteCatBreedsGateway(),
             dispatcher = dispatcher
         )
 
@@ -65,6 +71,7 @@ class BreedListInteractorTests {
 
         val interactor = BreedListInteractorImplementation(
             breedRepository = breedRepository,
+            favoriteCatBreedsGateway = FakeFavoriteCatBreedsGateway(),
             dispatcher = dispatcher
         )
 
@@ -84,6 +91,7 @@ class BreedListInteractorTests {
 
         val interactor = BreedListInteractorImplementation(
             breedRepository = breedRepository,
+            favoriteCatBreedsGateway = FakeFavoriteCatBreedsGateway(),
             dispatcher = dispatcher
         )
 
@@ -92,6 +100,66 @@ class BreedListInteractorTests {
             interactor.searchCatBreeds("name")
             assertTrue(awaitItem() is BreedListState.Loading)
             assertTrue(awaitItem() is BreedListState.SearchError)
+        }
+    }
+
+    @OptIn(ExperimentalCoroutinesApi::class)
+    @Test
+    fun `Given a Loaded state with a list of cat breeds When a favorite update is received Then update the favorite in the cat breed list And emit a Loaded state with the updated list`() = runTest {
+        val catBreeds = listOf(
+            CatBreed("id1", "name1", "image1", "origin1", "description1", listOf("temperament"), false),
+            CatBreed("id2", "name2", "image2", "origin2", "description2", listOf("temperament"), false)
+        )
+
+        val updatedCatBreeds = listOf(
+            CatBreed("id1", "name1", "image1", "origin1", "description1", listOf("temperament"), true),
+            CatBreed("id2", "name2", "image2", "origin2", "description2", listOf("temperament"), false)
+        )
+
+        val flow = MutableSharedFlow<FavoriteUpdate>()
+        val favoritesGateway = FakeFavoriteCatBreedsGateway(favoriteUdpdatesFlow =flow)
+
+        val interactor = BreedListInteractorImplementation(
+            breedRepository = FakeBreedRepository(),
+            favoriteCatBreedsGateway = favoritesGateway,
+            dispatcher = UnconfinedTestDispatcher(),
+            initialState = BreedListState.Loaded(catBreeds)
+        )
+
+        interactor.state.test {
+            awaitItem()
+            flow.emit(FavoriteUpdate("id1", true))
+            assertEquals(BreedListState.Loaded(updatedCatBreeds), awaitItem())
+        }
+    }
+
+    @OptIn(ExperimentalCoroutinesApi::class)
+    @Test
+    fun `Given a SearchLoaded state with a list of cat breeds When a favorite update is received Then update the favorite in the cat breed list And emit a SearchLoaded state with the updated list`() = runTest {
+        val catBreeds = listOf(
+            CatBreed("id1", "name1", "image1", "origin1", "description1", listOf("temperament"), false),
+            CatBreed("id2", "name2", "image2", "origin2", "description2", listOf("temperament"), false)
+        )
+
+        val updatedCatBreeds = listOf(
+            CatBreed("id1", "name1", "image1", "origin1", "description1", listOf("temperament"), true),
+            CatBreed("id2", "name2", "image2", "origin2", "description2", listOf("temperament"), false)
+        )
+
+        val flow = MutableSharedFlow<FavoriteUpdate>()
+        val favoritesGateway = FakeFavoriteCatBreedsGateway(favoriteUdpdatesFlow =flow)
+
+        val interactor = BreedListInteractorImplementation(
+            breedRepository = FakeBreedRepository(),
+            favoriteCatBreedsGateway = favoritesGateway,
+            dispatcher = UnconfinedTestDispatcher(),
+            initialState = BreedListState.SearchLoaded(catBreeds)
+        )
+
+        interactor.state.test {
+            awaitItem()
+            flow.emit(FavoriteUpdate("id1", true))
+            assertEquals(BreedListState.SearchLoaded(updatedCatBreeds), awaitItem())
         }
     }
 }
