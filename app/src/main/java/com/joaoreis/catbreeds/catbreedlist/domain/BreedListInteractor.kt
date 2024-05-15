@@ -6,4 +6,6 @@ interface BreedListInteractor {
     val state: Flow<BreedListState>
 
     suspend fun loadCatBreedList()
+
+    suspend fun searchCatBreeds(searchTearm: String)
 }

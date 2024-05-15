@@ -10,6 +10,8 @@ sealed class CatBreedListViewState {
     ): CatBreedListViewState()
 
     data object Error: CatBreedListViewState()
+
+    data object EmptySearchResults: CatBreedListViewState()
 }
 
 data class CatBreedViewItem(

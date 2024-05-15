@@ -11,4 +11,7 @@ class FakeBreedListInteractor(
     override val state: Flow<BreedListState> = MutableStateFlow(currentState)
 
     override suspend fun loadCatBreedList() {}
+    override suspend fun searchCatBreeds(searchTearm: String) {
+        TODO("Not yet implemented")
+    }
 }

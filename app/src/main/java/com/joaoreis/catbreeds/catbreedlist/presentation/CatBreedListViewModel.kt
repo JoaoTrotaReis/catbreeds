@@ -30,10 +30,16 @@ class CatBreedListViewModel @Inject constructor(
         }
     }
 
-    suspend fun loadCatBreeds() {
-        //viewModelScope.launch {
+    fun loadCatBreeds() {
+        viewModelScope.launch {
             breedListInteractor.loadCatBreedList()
-        //}
+        }
+    }
+
+    fun searchCatBreeds(searchTerm: String) {
+        viewModelScope.launch {
+            breedListInteractor.searchCatBreeds(searchTerm)
+        }
     }
 
     private suspend fun handleDomainStateChanges(breedListState: BreedListState) {
@@ -51,7 +57,20 @@ class CatBreedListViewModel @Inject constructor(
             BreedListState.Loading -> {
                 _viewState.emit(CatBreedListViewState.Loading)
             }
-            BreedListState.Idle -> {}
+
+            BreedListState.SearchError -> _viewState.emit(CatBreedListViewState.Error)
+            is BreedListState.SearchLoaded -> {
+                if (breedListState.data.isEmpty()) {
+                    _viewState.emit(CatBreedListViewState.EmptySearchResults)
+                } else {
+                    _viewState.emit(CatBreedListViewState.Loaded(
+                        breedListState.data.map {
+                            CatBreedViewItem(id = it.breedId, image = it.breedImage ?: "", breedName = it.breedName, isFavorite = it.isFavorite)
+                        }
+                    ))
+                }
+            }
+            else -> {}
         }
     }
 
