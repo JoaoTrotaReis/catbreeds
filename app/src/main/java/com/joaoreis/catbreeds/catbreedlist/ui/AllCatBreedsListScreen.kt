@@ -13,11 +13,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavController
 import com.joaoreis.catbreeds.catbreedlist.presentation.CatBreedListViewModel
 import com.joaoreis.catbreeds.catbreedlist.presentation.CatBreedListViewState
 import com.joaoreis.catbreeds.catbreedlist.presentation.toListItem
@@ -27,10 +29,11 @@ import com.joaoreis.catbreeds.ui.components.SearchField
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AllCatBreedsListScreen(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onItemClicked: (String) -> Unit
 ) {
     val viewModel: CatBreedListViewModel = hiltViewModel()
-    val text = rememberSaveable { mutableStateOf("") }
+    val text = remember { mutableStateOf("") }
 
     LaunchedEffect(Unit) {
         viewModel.loadCatBreeds()
@@ -48,14 +51,23 @@ fun AllCatBreedsListScreen(
 
         when (val state = viewModel.viewState.collectAsState().value) {
             CatBreedListViewState.Error -> {
-                Text("There was an error")
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .fillMaxHeight(),
+                    verticalArrangement = Arrangement.Center,
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Text("No results found")
+                }
             }
 
             is CatBreedListViewState.Loaded -> {
                 CatBreedsList(
                     catBreedItems = state.catBreedItems.map { it.toListItem() },
                     onFavoriteToggle = { id, isFavorite -> viewModel.toggleFavorite(id, isFavorite) },
-                    modifier = modifier
+                    modifier = modifier,
+                    onItemClicked = onItemClicked
                 )
             }
 
@@ -72,7 +84,15 @@ fun AllCatBreedsListScreen(
             }
 
             CatBreedListViewState.EmptySearchResults ->  {
-                Text("No results found")
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .fillMaxHeight(),
+                    verticalArrangement = Arrangement.Center,
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Text("No results found")
+                }
             }
         }
     }

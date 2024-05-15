@@ -21,4 +21,7 @@ interface CatBreedsDao {
 
     @Query("SELECT * FROM catbreedentity WHERE name LIKE :name")
     fun findCatBreedByName(name: String): List<CatBreedEntity>
+
+    @Query("SELECT * FROM catbreedentity WHERE id LIKE :id")
+    fun findCatBreedById(id: String): CatBreedEntity
 }

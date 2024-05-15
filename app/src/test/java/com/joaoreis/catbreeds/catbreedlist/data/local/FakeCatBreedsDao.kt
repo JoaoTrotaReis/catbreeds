@@ -17,4 +17,8 @@ class FakeCatBreedsDao(
     override fun updateCatBreed(id: String, isFavorite: Boolean) {}
 
     override fun findCatBreedByName(name: String): List<CatBreedEntity> = searchResult!!
+
+    override fun findCatBreedById(id: String): CatBreedEntity {
+        TODO("Not yet implemented")
+    }
 }

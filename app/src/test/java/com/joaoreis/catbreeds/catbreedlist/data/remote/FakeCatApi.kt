@@ -6,4 +6,7 @@ class FakeCatApi(
 ): CatApi {
     override suspend fun getCatBreeds(): List<CatBreedDTO> = catBreedList!!
     override suspend fun searchCatBreeds(searchTerm: String): List<CatBreedDTO> = searchResults!!
+    override suspend fun getCatBreedById(id: String): CatBreedDTO {
+        TODO("Not yet implemented")
+    }
 }

@@ -37,7 +37,8 @@ class FavoriteCatBreedsViewModel @Inject constructor(
                 _viewState.emit(FavoriteCatBreedsViewState.Error)
             }
             is FavoriteCatBreedsState.Loaded -> {
-                _viewState.emit(FavoriteCatBreedsViewState.Loaded(
+                _viewState.emit(
+                    FavoriteCatBreedsViewState.Loaded(
                     breedListState.data.map {
                         FavoriteCatBreedViewItem(
                             id = it.breedId,

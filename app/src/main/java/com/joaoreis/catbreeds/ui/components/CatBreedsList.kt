@@ -1,5 +1,6 @@
 package com.joaoreis.catbreeds.ui.components
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.lazy.grid.GridCells
@@ -16,6 +17,7 @@ import com.joaoreis.catbreeds.catbreedlist.ui.CatBreedItem
 fun CatBreedsList(
     catBreedItems: List<CatBreedListItem>,
     onFavoriteToggle: (String, Boolean) -> Unit,
+    onItemClicked: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
     LazyVerticalGrid(
@@ -31,6 +33,7 @@ fun CatBreedsList(
         content = {
             items(catBreedItems) {
                 CatBreedItem(
+                    modifier = Modifier.clickable { onItemClicked(it.id) },
                     id = it.id,
                     imageUrl = it.image,
                     breedName = it.breedName,
@@ -107,5 +110,5 @@ fun CatBreedListScreen_Preview() {
             breedName = "Abyssinian",
             isFavorite = true
         )
-    ), onFavoriteToggle = { _, _ -> })
+    ), onFavoriteToggle = { _, _ -> }, onItemClicked = {})
 }

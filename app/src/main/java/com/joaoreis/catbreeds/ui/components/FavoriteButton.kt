@@ -17,14 +17,15 @@ fun FavoriteButton(
     isFavorite: Boolean
 ) {
     IconToggleButton(
+        modifier = modifier,
         checked = isFavorite,
         onCheckedChange = {
             onToggle(it)
         }
     ) {
         Icon(
+            modifier = modifier,
             tint = color,
-
             imageVector = if (isFavorite) {
                 Icons.Filled.Favorite
             } else {
