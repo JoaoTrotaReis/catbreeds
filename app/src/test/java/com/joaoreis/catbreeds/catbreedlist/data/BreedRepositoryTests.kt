@@ -37,6 +37,27 @@ class BreedRepositoryTests {
             CatBreed("id2", "name2", "image2", "origin2", "description2", listOf("temperament"), false)
         )
 
+        val localDataSource = FakeLocalDataSource()
+        val remoteDataSource = FakeRemoteDataSource(Result.Success(catBreeds))
+
+        val repository = BreedRepositoryImplementation(
+            localDataSource = localDataSource,
+            remoteDataSource = remoteDataSource,
+            dispatcher = StandardTestDispatcher(testScheduler)
+        )
+
+        val actualResult = repository.getCatBreeds()
+
+        assertEquals(Result.Success(catBreeds), actualResult)
+    }
+
+    @Test
+    fun `Given there is an error getting breeds from local data source And there are breeds in remote data source When list of breeds is requested Then return the remote data source breeds`() = runTest {
+        val catBreeds = listOf(
+            CatBreed("id1", "name1", "image1", "origin1", "description1", listOf("temperament"), false),
+            CatBreed("id2", "name2", "image2", "origin2", "description2", listOf("temperament"), false)
+        )
+
         val localDataSource = FakeLocalDataSource(Result.Error())
         val remoteDataSource = FakeRemoteDataSource(Result.Success(catBreeds))
 
@@ -86,5 +107,78 @@ class BreedRepositoryTests {
         repository.getCatBreeds()
 
         assertEquals(catBreeds, localDataSource.storedBreeds)
+    }
+
+    @Test
+    fun `Given a search term When cat breeds are searched And there are local breeds Then return breeds from local data source`() = runTest{
+        val catBreeds = listOf(
+            CatBreed("id1", "name1", "image1", "origin1", "description1", listOf("temperament"), false),
+            CatBreed("id2", "name2", "image2", "origin2", "description2", listOf("temperament"), false)
+        )
+
+        val localDataSource = FakeLocalDataSource(searchResult = Result.Success(catBreeds))
+
+        val repository = BreedRepositoryImplementation(
+            localDataSource = localDataSource,
+            remoteDataSource = FakeRemoteDataSource(getBreedsResult = Result.Error()),
+            dispatcher = StandardTestDispatcher(testScheduler)
+        )
+
+        val actualResult = repository.searchCatBreeds("name")
+
+        assertEquals(Result.Success(catBreeds), actualResult)
+    }
+
+    @Test
+    fun `Given a search term When cat breeds are searched And there are no local breeds And there are remote breeds Then return breeds from remote data source`() = runTest{
+        val catBreeds = listOf(
+            CatBreed("id1", "name1", "image1", "origin1", "description1", listOf("temperament"), false),
+            CatBreed("id2", "name2", "image2", "origin2", "description2", listOf("temperament"), false)
+        )
+
+        val localDataSource = FakeRemoteDataSource(searchResult = Result.Success(catBreeds))
+
+        val repository = BreedRepositoryImplementation(
+            localDataSource = FakeLocalDataSource(),
+            remoteDataSource = localDataSource,
+            dispatcher = StandardTestDispatcher(testScheduler)
+        )
+
+        val actualResult = repository.searchCatBreeds("name")
+
+        assertEquals(Result.Success(catBreeds), actualResult)
+    }
+
+    @Test
+    fun `Given a search term When cat breeds are searched And there is an error getting local breeds And there are remote breeds Then return breeds from remote data source`() = runTest{
+        val catBreeds = listOf(
+            CatBreed("id1", "name1", "image1", "origin1", "description1", listOf("temperament"), false),
+            CatBreed("id2", "name2", "image2", "origin2", "description2", listOf("temperament"), false)
+        )
+
+        val localDataSource = FakeRemoteDataSource(searchResult = Result.Success(catBreeds))
+
+        val repository = BreedRepositoryImplementation(
+            localDataSource = FakeLocalDataSource(searchResult = Result.Error()),
+            remoteDataSource = localDataSource,
+            dispatcher = StandardTestDispatcher(testScheduler)
+        )
+
+        val actualResult = repository.searchCatBreeds("name")
+
+        assertEquals(Result.Success(catBreeds), actualResult)
+    }
+
+    @Test
+    fun `Given a search term When cat breeds are searched And there is an error getting local breeds And there is an error getting remote breeds Then return error`() = runTest{
+        val repository = BreedRepositoryImplementation(
+            localDataSource = FakeLocalDataSource(searchResult = Result.Error()),
+            remoteDataSource = FakeRemoteDataSource(searchResult = Result.Error()),
+            dispatcher = StandardTestDispatcher(testScheduler)
+        )
+
+        val actualResult = repository.searchCatBreeds("name")
+
+        assertTrue(actualResult is Result.Error)
     }
 }

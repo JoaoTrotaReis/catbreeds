@@ -17,4 +17,15 @@ class BreedRemoteDataSourceImplementation(
             Result.Error()
         }
     }
+
+    override suspend fun searchBreed(name: String): Result<List<CatBreed>> {
+        return try {
+            val catBreeds = catApi.searchCatBreeds(name).map {
+                it.toDomainModel()
+            }
+            Result.Success(catBreeds)
+        } catch (e: Exception) {
+            Result.Error()
+        }
+    }
 }

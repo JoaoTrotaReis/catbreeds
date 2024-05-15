@@ -18,4 +18,12 @@ class BreedLocalDataSourceImplementation(
     override fun saveBreedList(breeds: List<CatBreed>) {
         catBreedsDao.saveCatBreeds(breeds.map { it.toDatabaseEntity() })
     }
+
+    override fun searchBreed(name: String): Result<List<CatBreed>> {
+        return try {
+            Result.Success(catBreedsDao.findCatBreedByName("%${name}%").map { it.toDomainModel() })
+        } catch (e: Exception) {
+            Result.Error()
+        }
+    }
 }

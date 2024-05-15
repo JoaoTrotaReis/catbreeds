@@ -25,6 +25,27 @@ class BreedRepositoryImplementation(
         }
     }
 
+    override suspend fun searchCatBreeds(searchTerm: String): Result<List<CatBreed>> {
+        return when(val localBreedList = localDataSource.searchBreed(searchTerm)) {
+            is Result.Success -> {
+                if(localBreedList.data.isEmpty()) {
+                    searchRemoteData(searchTerm)
+                } else localBreedList
+
+            }
+            is Result.Error -> {
+                searchRemoteData(searchTerm)
+            }
+        }
+    }
+
+    private suspend fun searchRemoteData(searchTerm: String): Result<List<CatBreed>> {
+        return when(val remoteBreedList = remoteDataSource.searchBreed(searchTerm)) {
+            is Result.Error -> Result.Error()
+            is Result.Success -> Result.Success(remoteBreedList.data)
+        }
+    }
+
     private suspend fun loadAndSaveRemoteData(): Result<List<CatBreed>> {
         return when(val remoteBreedList = remoteDataSource.getBreedList()) {
             is Result.Error -> Result.Error()

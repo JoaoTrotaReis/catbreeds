@@ -18,4 +18,7 @@ interface CatBreedsDao {
 
     @Query("UPDATE catbreedentity SET isFavorite = :isFavorite WHERE id = :id")
     fun updateCatBreed(id: String, isFavorite: Boolean)
+
+    @Query("SELECT * FROM catbreedentity WHERE name LIKE :name")
+    fun findCatBreedByName(name: String): List<CatBreedEntity>
 }
