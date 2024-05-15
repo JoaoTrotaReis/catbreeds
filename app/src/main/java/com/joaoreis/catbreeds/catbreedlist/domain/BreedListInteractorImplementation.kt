@@ -22,4 +22,14 @@ class BreedListInteractorImplementation(
             }
         }
     }
+
+    override suspend fun searchCatBreeds(searchTearm: String) {
+        withContext(dispatcher) {
+            _state.emit(BreedListState.Loading)
+            when(val result = breedRepository.searchCatBreeds(searchTearm)) {
+                is Result.Error -> _state.emit(BreedListState.SearchError)
+                is Result.Success -> _state.emit(BreedListState.SearchLoaded(result.data))
+            }
+        }
+    }
 }
