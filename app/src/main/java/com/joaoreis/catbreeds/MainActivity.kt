@@ -15,6 +15,7 @@ import com.joaoreis.catbreeds.catbreedlist.ui.AllCatBreedsListScreen
 import com.joaoreis.catbreeds.details.ui.CatBreedDetailsScreen
 import com.joaoreis.catbreeds.favorites.ui.FavoriteCatBreedsScreen
 import com.joaoreis.catbreeds.ui.components.BottomNavigationBar
+import com.joaoreis.catbreeds.ui.components.MainScreen
 import com.joaoreis.catbreeds.ui.components.Screen
 import com.joaoreis.catbreeds.ui.theme.CatBreedsTheme
 import dagger.hilt.android.AndroidEntryPoint
@@ -25,55 +26,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-            val navController = rememberNavController()
-            val bottomNavScreens = listOf(Screen.AllCatBreeds, Screen.FavoriteCatBreeds)
-            CatBreedsTheme {
-                Scaffold(modifier = Modifier.fillMaxSize(),
-                    bottomBar = {
-                        BottomNavigationBar(
-                            navController = navController,
-                            items = bottomNavScreens
-                        )
-                    }
-                ) { paddingValues ->
-                    NavHost(
-                        navController = navController,
-                        startDestination = Screen.AllCatBreeds.route,
-                        modifier = Modifier.padding(paddingValues = paddingValues)
-                    ) {
-                        composable(Screen.AllCatBreeds.route) {
-                            AllCatBreedsListScreen(
-                                modifier = Modifier.fillMaxSize(),
-                                onItemClicked = {
-                                    navController.navigate(
-                                        Screen.CatBreedDetails.buildNavRoute(
-                                            it
-                                        )
-                                    )
-                                }
-                            )
-                        }
-                        composable(Screen.FavoriteCatBreeds.route) {
-                            FavoriteCatBreedsScreen(
-                                modifier = Modifier.fillMaxSize(),
-                                onItemClicked = {
-                                    navController.navigate(
-                                        Screen.CatBreedDetails.buildNavRoute(
-                                            it
-                                        )
-                                    )
-                                }
-                            )
-                        }
-                        composable(Screen.CatBreedDetails.route) {
-                            CatBreedDetailsScreen(
-                                modifier = Modifier.fillMaxSize(),
-                                onBackPressed = { navController.navigateUp() }
-                            )
-                        }
-                    }
-                }
-            }
+            MainScreen()
         }
     }
 }

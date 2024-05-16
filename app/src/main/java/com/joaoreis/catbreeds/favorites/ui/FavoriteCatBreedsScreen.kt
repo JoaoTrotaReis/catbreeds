@@ -11,6 +11,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.joaoreis.catbreeds.favorites.presentation.FavoriteCatBreedsViewModel
 import com.joaoreis.catbreeds.favorites.presentation.FavoriteCatBreedsViewState
@@ -43,7 +44,8 @@ fun FavoriteCatBreedsScreen(
                 Column(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .fillMaxHeight(),
+                        .fillMaxHeight()
+                        .testTag("EmptyFavorites"),
                     verticalArrangement = Arrangement.Center,
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
